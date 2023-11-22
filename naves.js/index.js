@@ -28,7 +28,11 @@ function Bala(x,y,w){
     this.y = y,
     this.w = w,
     this.dibujar = function(){
-
+        game.ctx.save();
+        game.ctx.fillStyle= game.colorBala;
+        game.ctx.fillRect(this.x, this.y,this.w, this.w);
+        this.y = this.y-4;
+        game.ctx.restore();
     }
 }
 
@@ -96,30 +100,39 @@ const animar = () =>{
 const verificar = () =>{
 
     if(game.tecla[KEY_RIGHT]){
-        game.x += 3
+        game.x += 2
     }
     if(game.tecla[KEY_LEFT]){
-        game.x -= 3
+        game.x -= 2
     }
-    if(game.tecla[KEY_ENTER]){
-        game.x += 10
+    
+    if(game.x > game.canvas.width -40){
+        game.x = 920;
     }
-    if(game.tecla[KEY_UP]){
-        game.x += 10
+    if(game.x < 10){
+        game.x = 10
     }
-    if(game.tecla[KEY_UP]){
-        game.x += 10
-    }
-
-    x+=2;
-    if(x > game.canvas.width){
-        x = 0;
+    //disparo
+    if(game.tecla[BARRA]){
+        game.balas_array.push(new Bala(game.jugador.x + 12, game.jugador.y - 3, 5));
+        game.tecla[BARRA] = false;
     }
 }
 
 const pintar = () =>{
     game.ctx.clearRect(0,0, game.canvas.width, game.canvas.height);
     game.jugador.dibujar(game.x);
+
+    //mover las balas
+
+    for(let i = 0; i < game.balas_array.length; i++){
+        if(game.balas_array[i] != null){
+            game.balas_array[i].dibujar();
+            if(game.balas_array[i].y < 0 ){
+                game.balas_array[i] = null;
+            }
+        }
+    }
 
 }
 
