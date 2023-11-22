@@ -74,6 +74,12 @@ const seleccionar = (e) =>{
 const inicio = () =>{
     game.ctx.clearRect(0,0,game.canvas.width, game.canvas.height);
     game.caratula = false;
+    game.jugador = new Jugador(0);
+    game.x = game.canvas.width/2;
+    game.jugador.dibujar(game.x);
+    animar();
+
+
 }
 
 
@@ -88,6 +94,23 @@ const animar = () =>{
 }
 
 const verificar = () =>{
+
+    if(game.tecla[KEY_RIGHT]){
+        game.x += 3
+    }
+    if(game.tecla[KEY_LEFT]){
+        game.x -= 3
+    }
+    if(game.tecla[KEY_ENTER]){
+        game.x += 10
+    }
+    if(game.tecla[KEY_UP]){
+        game.x += 10
+    }
+    if(game.tecla[KEY_UP]){
+        game.x += 10
+    }
+
     x+=2;
     if(x > game.canvas.width){
         x = 0;
@@ -96,11 +119,21 @@ const verificar = () =>{
 
 const pintar = () =>{
     game.ctx.clearRect(0,0, game.canvas.width, game.canvas.height);
-    game.ctx.fillStyle="red";
-    game.ctx.beginPath();
-    game.ctx.arc(x,y,5,0,2 * Math.PI);
-    game.ctx.fill();
+    game.jugador.dibujar(game.x);
+
 }
+
+//Listener
+
+document.addEventListener("keydown", function(e){
+    game.teclaPulsada = e.keyCode;
+    game.tecla[e.keyCode] = true;
+});
+
+document.addEventListener("keyup", function(e){
+    game.tecla[e.keyCode] = false;
+});
+
 
 window.requestAnimationFrame = (function (){
     return  window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame ||
@@ -116,8 +149,13 @@ window.onload = function(){
         game.ctx= canvas.getContext("2d");
 
         if(game.ctx){
+            game.imagen = new Image();
+            game.imagen.src = "imagenes/nave.png"
+
             caratula();
-            //animar();
+
+            game.canvas.addEventListener("click",seleccionar, false);
+            
         }else{
             alert('No soporta canvas')
         }
