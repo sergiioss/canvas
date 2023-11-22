@@ -22,11 +22,11 @@ window.onload= function(){
             }
             function procesaImagen(){
                 limpiar();
-                ctx.drawImage(imagen, 10,10);
+                ctx.drawImage(imagen, -200,-200);
             }
 
             function limpiar(){
-                ctx.clearRect(250,10, imagen.width, imagen.height);
+                ctx.clearRect(-200,-200, imagen.width, imagen.height);
             }
 
             imagen = new Image();

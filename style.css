@@ -9,4 +9,7 @@ body{
 #canvas{
     background-color: rgb(11, 167, 233);
     border:1px yellow solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
