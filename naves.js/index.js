@@ -45,17 +45,41 @@ function Jugador(x){
     };
 }
 
-function Eenemigo(x,y){
+function Enemigo(x,y){
     this.x = x;
     this.y = y,
     this.w = 35,
     this.veces = 0,
     this.dx = 5;
     this.ciclos = 0;
-    this.num = 14;
+    this.num = 60;
     this.figura = true;
     this.vive = true;
     this.dibujar = function(){
+
+        //Retraso
+        if(this.ciclos > 30){
+            //saltitos
+            if(this.veces > this.num){
+                this.dx *= -1;
+                this.veces = 0;
+                this.num = 28;
+                this.y += 20;
+                this.dx = (this.dx > 0) ? this.dx++ : this.dx--;
+            }else{
+                this.x += this.dx;
+            }
+
+            this.veces++;
+            this.ciclos=0;
+
+        }else{
+
+            this.ciclos++;
+
+        }
+
+        game.ctx.drawImage(game.imagenEnemigo, 0,0,1000,1000, this.x, this.y, 35,30);
     };
 }
 
@@ -82,8 +106,6 @@ const inicio = () =>{
     game.x = game.canvas.width/2;
     game.jugador.dibujar(game.x);
     animar();
-
-
 }
 
 
@@ -134,6 +156,11 @@ const pintar = () =>{
         }
     }
 
+    //enemigos
+    for(let i = 0; i < game.enemigos_array.length; i++){
+        game.enemigos_array[i].dibujar();
+    }
+
 }
 
 //Listener
@@ -164,6 +191,20 @@ window.onload = function(){
         if(game.ctx){
             game.imagen = new Image();
             game.imagen.src = "imagenes/nave.png"
+
+            //crear enemigos
+            game.imagenEnemigo = new Image();
+            game.imagenEnemigo.src = "/imagenes/ene.png";
+            game.imagenEnemigo.onload = function(){
+
+                for(let i = 0; i < 5 ; i++){
+                    for(let j = 0; j < 10 ; j++){
+                        game.enemigos_array.push(new Enemigo(100+40*j, 30+45*i));
+                    }
+                }
+            }
+
+
 
             caratula();
 
