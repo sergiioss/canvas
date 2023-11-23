@@ -9,8 +9,11 @@ game={
     teclaPulsada:null,
     tecla:[],
     colorBala:"red",
+    colorBala2:"yellow",
     balas_array:new Array(),
-    enemigos_array:new Array()  
+    balasEnemigas_array:new Array(),
+    enemigos_array:new Array(),
+    disparo:false  
 }
 //Constantes
 
@@ -34,14 +37,23 @@ function Bala(x,y,w){
         this.y = this.y-4;
         game.ctx.restore();
     }
+    this.disparar = function(){
+        game.ctx.save();
+        game.ctx.fillStyle= game.colorBala;
+        game.ctx.fillRect(this.x, this.y,this.w, this.w);
+        this.y = this.y + 6;
+        game.ctx.restore();
+    }
 }
 
 function Jugador(x){
     this.x = x;
     this.y = 450;
+    this.w = 30;
+    this.h = 15;
     this.dibujar = function(x){
         this.x = x;
-        game.ctx.drawImage(game.imagen, this.x, this.y, 30,15);
+        game.ctx.drawImage(game.imagen, this.x, this.y, this.w, this.h);
     };
 }
 
@@ -72,6 +84,7 @@ function Enemigo(x,y){
 
             this.veces++;
             this.ciclos=0;
+            this.figura = !this.figura;
 
         }else{
 
@@ -117,6 +130,47 @@ const animar = () =>{
     requestAnimationFrame(animar);
     verificar();
     pintar();
+    colisiones();
+}
+
+const colisiones = () =>{
+    let enemigo, bala;
+    for(let i = 0; i<game.enemigos_array.length;i++){
+        for(let j = 0; j<game.balas_array.length;j++){
+            enemigo = game.enemigos_array[i];
+            bala = game.balas_array[j];
+
+            if(enemigo != null && bala != null){
+                if((bala.x > enemigo.x) && 
+                (bala.x<enemigo.x+enemigo.w) && 
+                (bala.y>enemigo.y) && 
+                (bala.y<enemigo.y+enemigo.w)){
+                    enemigo.vive = false;
+                    game.enemigos_array[i] = null;
+                    game.balas_array[j] = null;
+                    game.disparo = false;
+                }
+            }
+        }
+    }
+
+    //colisiones balas enemigas
+    for(let j = 0; j< game.balasEnemigas_array.length; j++){
+        bala = game.balasEnemigas_array[j];
+        if(bala != null){
+            if((bala.x > game.jugador.x) && 
+            (bala.x < game.jugador.x + game.jugador.w) && 
+            (bala.y > game.jugador.y) && 
+            (bala.y < game.jugador.y + game.jugador.h)){
+                gameOver();
+            }
+        }
+    }
+
+}
+
+const gameOver = () =>{
+    console.log("termino el juego");
 }
 
 const verificar = () =>{
@@ -136,9 +190,31 @@ const verificar = () =>{
     }
     //disparo
     if(game.tecla[BARRA]){
-        game.balas_array.push(new Bala(game.jugador.x + 12, game.jugador.y - 3, 5));
-        game.tecla[BARRA] = false;
+        if(game.disparo === false){
+            game.balas_array.push(new Bala(game.jugador.x + 12, game.jugador.y - 3, 5));
+            game.tecla[BARRA] = false;
+            game.disparo === true;
+        }
     }
+
+    //disparo enemigo
+    if(Math.random() > 0.99){
+        dispararEnemigos();
+    }
+}
+
+const dispararEnemigos = () =>{
+    let ultimos = new Array();
+    for(let i = game.enemigos_array.length-1; i>0; i--){
+        if(game.enemigos_array[i]!=null){
+            ultimos.push(i);
+        }
+        if(ultimos.length === 10){
+            break;
+        }
+    }
+    d = ultimos[Math.floor(Math.random() * 10)];
+    game.balasEnemigas_array.push(new Bala(game.enemigos_array[d].x+game.enemigos_array[d].w/2,game.enemigos_array[d].y,10));
 }
 
 const pintar = () =>{
@@ -151,14 +227,28 @@ const pintar = () =>{
         if(game.balas_array[i] != null){
             game.balas_array[i].dibujar();
             if(game.balas_array[i].y < 0 ){
+                game.disparo = false;
                 game.balas_array[i] = null;
+            }
+        }
+    }
+
+    //balas enemigas
+
+    for(let i = 0; i < game.balasEnemigas_array.length; i++){
+        if(game.balasEnemigas_array[i] != null){
+            game.balasEnemigas_array[i].disparar();
+            if(game.balasEnemigas_array[i].y > game.canvas.height){
+                game.balasEnemigas_array[i]=null
             }
         }
     }
 
     //enemigos
     for(let i = 0; i < game.enemigos_array.length; i++){
-        game.enemigos_array[i].dibujar();
+        if(game.enemigos_array[i] != null){
+            game.enemigos_array[i].dibujar();
+        }
     }
 
 }
