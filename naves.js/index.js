@@ -13,7 +13,9 @@ game={
     balas_array:new Array(),
     balasEnemigas_array:new Array(),
     enemigos_array:new Array(),
-    disparo:false  
+    disparo:false,
+    puntos:0,
+    finJuego: false  
 }
 //Constantes
 
@@ -127,10 +129,12 @@ let x = 100;
 let y = 100;
 
 const animar = () =>{
-    requestAnimationFrame(animar);
-    verificar();
-    pintar();
-    colisiones();
+    if(game.finJuego == false){
+        requestAnimationFrame(animar);
+        verificar();
+        pintar();
+        colisiones();
+    }
 }
 
 const colisiones = () =>{
@@ -149,6 +153,7 @@ const colisiones = () =>{
                     game.enemigos_array[i] = null;
                     game.balas_array[j] = null;
                     game.disparo = false;
+                    game.puntos += 10;
                 }
             }
         }
@@ -170,7 +175,33 @@ const colisiones = () =>{
 }
 
 const gameOver = () =>{
-    console.log("termino el juego");
+    game.ctx.clearRect(0,0, game.canvas.width, game.canvas.height);
+    game.balas_array = [];
+    game.enemigos_array = [];
+    game.balasEnemigas_array = [];
+    game.finJuego = true;
+    mensaje("Game over", 100, 60);
+    mensaje("Lograste " + game.puntos + " puntos", 220);
+
+    if(game.puntos>100 || game.puntos <=200){
+        mensaje("Casi lo logras", 340);
+    }else if(game.puntos>200){
+        mensaje("felicitaciones",340);
+    }else{
+        mensaje("lo sentimos", 340);
+    }
+}
+
+const mensaje = (cadena, y,tamano = 40) =>{
+    let medio = (game.canvas.width)/2;
+    game.ctx.save();
+    game.ctx.fillStyle= "green";
+    game.ctx.strokeStyle = "blue";
+    game.ctx.textBaseline = "top";
+    game.ctx.font = "bold " + tamano + "px Courier";
+    game.ctx.textAlign = "center";
+    game.ctx.fillText(cadena, medio, y);
+    game.ctx.restore();
 }
 
 const verificar = () =>{
@@ -219,6 +250,7 @@ const dispararEnemigos = () =>{
 
 const pintar = () =>{
     game.ctx.clearRect(0,0, game.canvas.width, game.canvas.height);
+    score();
     game.jugador.dibujar(game.x);
 
     //mover las balas
@@ -251,6 +283,14 @@ const pintar = () =>{
         }
     }
 
+}
+
+const score = () =>{
+    game.ctx.save();
+    game.ctx.fillStyle = "white";
+    game.ctx.font = "bold 20px Courier";
+    game.ctx.fillText("SCORE: " + game.puntos, 10,20);
+    game.ctx.restore();
 }
 
 //Listener
