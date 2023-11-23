@@ -15,7 +15,11 @@ game={
     enemigos_array:new Array(),
     disparo:false,
     puntos:0,
-    finJuego: false  
+    finJuego: false,
+    boing:null,
+    disparoJugador:null,
+    intro:null,
+    fin:null  
 }
 //Constantes
 
@@ -154,6 +158,7 @@ const colisiones = () =>{
                     game.balas_array[j] = null;
                     game.disparo = false;
                     game.puntos += 10;
+/*                     game.boing.play(); */
                 }
             }
         }
@@ -180,6 +185,7 @@ const gameOver = () =>{
     game.enemigos_array = [];
     game.balasEnemigas_array = [];
     game.finJuego = true;
+ /*    game.fin.play(); */
     mensaje("Game over", 100, 60);
     mensaje("Lograste " + game.puntos + " puntos", 220);
 
@@ -225,6 +231,7 @@ const verificar = () =>{
             game.balas_array.push(new Bala(game.jugador.x + 12, game.jugador.y - 3, 5));
             game.tecla[BARRA] = false;
             game.disparo === true;
+ /*            game.disparJugador.play(); */
         }
     }
 
@@ -319,6 +326,12 @@ window.onload = function(){
         game.ctx= canvas.getContext("2d");
 
         if(game.ctx){
+            //sonidos del juego
+            /*game.boing = document.getElementById("boing");
+            game.disparoJugador = document.getElementById("disparo");
+            game.intro = document.getElementById("intro");
+            game.fin = document.getElementById("fin");*/
+
             game.imagen = new Image();
             game.imagen.src = "imagenes/nave.png"
 
