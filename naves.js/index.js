@@ -246,7 +246,7 @@ const verificar = () =>{
 
 const dispararEnemigos = () =>{
     let ultimos = new Array();
-    for(let i = game.enemigos_array.length-1; i>0; i--){
+    for(let i = game.enemigos_array.length-1; i>=0; i--){
         if(game.enemigos_array[i]!=null){
             ultimos.push(i);
         }
@@ -255,7 +255,7 @@ const dispararEnemigos = () =>{
         }
     }
     d = ultimos[Math.floor(Math.random() * 10)];
-    game.balasEnemigas_array.push(new Bala(game.enemigos_array[d].x+game.enemigos_array[d].w/2,game.enemigos_array[d].y,10));
+    game.balasEnemigas_array.push(new Bala(game.enemigos_array[d].x + game.enemigos_array[d].w / 2,game.enemigos_array[d].y, 10));
 }
 
 const pintar = () =>{
@@ -340,7 +340,7 @@ window.onload = function(){
 
             //crear enemigos
             game.imagenEnemigo = new Image();
-            game.imagenEnemigo.src = "/imagenes/ene.png";
+            game.imagenEnemigo.src = "imagenes/ene.png";
             game.imagenEnemigo.onload = function(){
 
                 for(let i = 0; i < 5 ; i++){
