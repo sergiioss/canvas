@@ -40,14 +40,14 @@ function Bala(x,y,w){
         game.ctx.save();
         game.ctx.fillStyle= game.colorBala;
         game.ctx.fillRect(this.x, this.y,this.w, this.w);
-        this.y = this.y-4;
+        this.y = this.y -4;
         game.ctx.restore();
     }
     this.disparar = function(){
         game.ctx.save();
         game.ctx.fillStyle= game.colorBala;
         game.ctx.fillRect(this.x, this.y,this.w, this.w);
-        this.y = this.y + 6;
+        this.y = this.y + 1;
         game.ctx.restore();
     }
 }
@@ -55,8 +55,8 @@ function Bala(x,y,w){
 function Jugador(x){
     this.x = x;
     this.y = 450;
-    this.w = 30;
-    this.h = 15;
+    this.w = 60;
+    this.h = 60;
     this.dibujar = function(x){
         this.x = x;
         game.ctx.drawImage(game.imagen, this.x, this.y, this.w, this.h);
@@ -173,6 +173,9 @@ const colisiones = () =>{
             (bala.y > game.jugador.y) && 
             (bala.y < game.jugador.y + game.jugador.h)){
                 gameOver();
+                setTimeout(()=>{
+                    location.reload();
+                },2000)
             }
         }
     }
@@ -228,10 +231,10 @@ const verificar = () =>{
     //disparo
     if(game.tecla[BARRA]){
         if(game.disparo === false){
-            game.balas_array.push(new Bala(game.jugador.x + 12, game.jugador.y - 3, 5));
+            game.balas_array.push(new Bala(game.jugador.x + 12, game.jugador.y - 3, 10));
             game.tecla[BARRA] = false;
             game.disparo === true;
- /*            game.disparJugador.play(); */
+            /*game.disparJugador.play(); */
         }
     }
 
